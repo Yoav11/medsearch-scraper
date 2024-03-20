@@ -1,0 +1,92 @@
+[
+	{
+		"name": "Abacavir",
+		"side_effects": {
+			"common": "Abdominal pain; anaemia (may require transfusion); asthenia; diarrhoea; dizziness; fever; flatulence; headache; insomnia; nausea; neutropenia; skin reactions; vomiting; Appetite decreased; lethargy; ",
+			"uncommon": "Angioedema; pancreatitis; ",
+			"rare": "Lactic acidosis; Severe cutaneous adverse reactions (SCARs); ",
+			"unknown_frequency": "Immune reconstitution inflammatory syndrome; osteonecrosis; weight increased; Hypersensitivity; "
+		}
+	},
+	{
+		"name": "Abacavir with dolutegravir and lamivudine",
+		"side_effects": {
+			"common": "",
+			"uncommon": "",
+			"rare": "",
+			"unknown_frequency": ""
+		}
+	},
+	{
+		"name": "Abacavir with lamivudine",
+		"side_effects": {
+			"common": "",
+			"uncommon": "",
+			"rare": "",
+			"unknown_frequency": ""
+		}
+	},
+	{
+		"name": "Abacavir with lamivudine and zidovudine",
+		"side_effects": {
+			"common": "",
+			"uncommon": "",
+			"rare": "",
+			"unknown_frequency": ""
+		}
+	},
+	{
+		"name": "Abatacept",
+		"side_effects": {
+			"common": "Asthenia; cough; diarrhoea; dizziness; gastrointestinal discomfort; headaches; hypertension; increased risk of infection; nausea; oral ulceration; skin reactions; vomiting; ",
+			"uncommon": "Alopecia; anxiety; arrhythmias; arthralgia; bruising tendency; conjunctivitis; depression; dry eye; dyspnoea; gastritis; hyperhidrosis; hypotension; influenza like illness; leucopenia; menstrual cycle irregularities; neoplasms; pain in extremity; palpitations; paraesthesia; respiratory disorders; sepsis; sleep disorders; throat tightness; thrombocytopenia; vasculitis; vasodilation; vertigo; visual acuity decreased; weight increased; ",
+			"rare": "Pelvic inflammatory disease; ",
+			"unknown_frequency": ""
+		}
+	},
+	{
+		"name": "Abemaciclib [Specialist drug]",
+		"side_effects": {
+			"common": "Alopecia; anaemia; appetite decreased; decreased leucocytes; diarrhoea; dizziness; dyspepsia; embolism and thrombosis; excessive tearing; fatigue; fever; headache; increased risk of infection; muscle weakness; nail disorder; nausea; neutropenia; respiratory disorders; skin reactions; stomatitis; taste altered; thrombocytopenia; vomiting; ",
+			"uncommon": "",
+			"rare": "",
+			"unknown_frequency": "Neutropenic sepsis; "
+		}
+	},
+	{
+		"name": "Abiraterone acetate",
+		"side_effects": {
+			"common": "Angina pectoris; arrhythmias; bone fracture; diarrhoea; dyspepsia; haematuria; heart failure; hepatic disorders; hypertension; hypertriglyceridaemia; hypokalaemia; left ventricular dysfunction; osteoporosis; peripheral oedema; rash; sepsis; urinary tract infection; ",
+			"uncommon": "Adrenal insufficiency; myopathy; ",
+			"rare": "Alveolitis allergic; ",
+			"unknown_frequency": "Myocardial infarction; QT interval prolongation; "
+		}
+	},
+	{
+		"name": "Abrocitinib",
+		"side_effects": {
+			"common": "Abdominal pain upper; acne; dizziness; headache; increased risk of infection; nausea; vomiting; ",
+			"uncommon": "Dyslipidaemia; embolism and thrombosis; lymphopenia; thrombocytopenia; ",
+			"rare": "",
+			"unknown_frequency": "Cardiovascular event; malignancy; neoplasms; reactivation of infections; "
+		}
+	},
+	{
+		"name": "Acalabrutinib [Specialist drug]",
+		"side_effects": {
+			"common": "Abdominal pain; anaemia; arrhythmias; arthralgia; asthenia; constipation; diarrhoea; dizziness; haemorrhage; headache; increased risk of infection; intracranial haemorrhage; musculoskeletal pain; nausea; neutropenia; second primary malignancy; skin reactions; thrombocytopenia; vomiting; ",
+			"uncommon": "Hepatitis B reactivation; lymphocytosis; tumour lysis syndrome; ",
+			"rare": "",
+			"unknown_frequency": "Cough; leucopenia; progressive multifocal leukoencephalopathy (PML); sepsis; "
+		}
+	},
+	{
+		"name": "Acamprosate calcium",
+		"side_effects": {
+			"common": "Abdominal pain; diarrhoea; flatulence; nausea; sexual dysfunction; skin reactions; vomiting; ",
+			"uncommon": "",
+			"rare": "",
+			"unknown_frequency": ""
+		}
+	}
+]
