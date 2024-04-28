@@ -1,39 +1,36 @@
 from requests import Session
 from bs4 import BeautifulSoup
 from tqdm import tqdm
-from json import JSONEncoder
 
 from typing import Dict, List
 
-class SideEffects:
-	def __init__(self, common: str="", uncommon: str="", rare: str="", unknown_frequency: str=""):
-		self.common = common
-		self.uncommon = uncommon
-		self.rare = rare
-		self.unknown_frequency = unknown_frequency
+class SideEffectsInformation:
+	def __init__(self, text: str, title: str="", header: str="", frequency: str="", route: str=""):
+		self.title = title
+		self.text = text
+		self.header = header
+		self.frequency = frequency
+		self.route = route
+	
+	def __repr__(self):
+		return self.title
 
 class Drug:
 	def __init__(self, name):
 		self.name = name
-		self.side_effects = SideEffects()
+		self.side_effects: List[SideEffectsInformation] = []
 
 	def __repr__(self):
-		return (self.name + "\n\tCommon: " + self.side_effects.common
-		+ "\n\tUncommon: " + self.side_effects.uncommon
-		+ "\n\tRare: " + self.side_effects.rare
-		+ "\n\tUnknown Frequency: " + self.side_effects.unknown_frequency
-		)
-
-class DrugEncoder(JSONEncoder):
-        def default(self, o):
-            return o.__dict__
+		return (self.name + ", side_effects: " + self.side_effects)
+	
+	def has_side_effects(self):
+		return not self.side_effects.empty()
 
 class BnfScraper:
 	def __init__(self, session: Session):
 		self.session = session
 		self.base_url = "https://bnf.nice.org.uk"
 		self.drug_endpoint = "drugs"
-		self.headers = set()
 
 	def scrape(self) -> List[Drug]:
 		drugs = self.get_drugs()
@@ -57,23 +54,22 @@ class BnfScraper:
 			return drug
 		
 		for i in side_effects:
+			title = i.findChildren("span")[-1].get_text()
+			title = title if "Side-effects" not in title else ""
 			side_effects_texts = i.find_next_sibling("div").findChildren("p")
 			for j in side_effects_texts:
-				header = j.find_previous_sibling()
-				self.populate_side_effect_section(drug, header.get_text(), j.get_text())
+				side_effect = SideEffectsInformation(j.get_text().lower())
+				previous_tag = j.find_previous_sibling().name
+				if j.find_previous_sibling('h3'):
+					side_effect.header = j.find_previous_sibling('h3').get_text()
+				if previous_tag in ['h4', 'h5'] and j.find_previous_sibling('h4'):
+					side_effect.frequency = j.find_previous_sibling('h4').get_text()
+				if previous_tag in ['h5'] and j.find_previous_sibling('h5'):
+					side_effect.route = j.find_previous_sibling('h5').get_text()
+				side_effect.title = title
+				drug.side_effects.append(side_effect)
 
 		return drug
-	
-	def populate_side_effect_section(self, drug: Drug, header: str, content: str):
-		if header == "Common or very common":
-			drug.side_effects.common += content + "; "
-		elif header == "Uncommon":
-			drug.side_effects.uncommon += content + "; "
-		elif header == "Rare or very rare":
-			drug.side_effects.rare += content + "; "
-		elif header == "Frequency not known":
-			drug.side_effects.unknown_frequency += content + "; "
-		return
 
 	def get_drugs(self) -> Dict[str, str]:
 		landing_page = self.session.get(f"{self.base_url}/{self.drug_endpoint}", headers={
@@ -88,7 +84,9 @@ class BnfScraper:
 
 		out = {}
 		for i in result:
-			out[i.get_text()] = i.get('href')
+			name = i.get_text()
+			if 'with' not in name.lower():
+				out[i.get_text()] = i.get('href')
 
 		return out
 
