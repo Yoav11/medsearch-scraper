@@ -16,8 +16,13 @@ class SideEffectsInformation:
 		return self.title
 
 class Drug:
-	def __init__(self, name):
+	def __init__(self, name, endpoint, has_renal_impairment, has_pregnancy, has_breast_feeding, has_hepatic_impairment):
 		self.name = name
+		self.endpoint = endpoint
+		self.has_renal_impairment = has_renal_impairment
+		self.has_pregnancy = has_pregnancy
+		self.has_breast_feeding = has_breast_feeding
+		self.has_hepatic_impairment = has_hepatic_impairment
 		self.side_effects: List[SideEffectsInformation] = []
 
 	def __repr__(self):
@@ -31,6 +36,9 @@ class BnfScraper:
 		self.session = session
 		self.base_url = "https://bnf.nice.org.uk"
 		self.drug_endpoint = "drugs"
+		self.renal_drugs = set()
+		self.renal_drugs_lengths = set()
+		self.renal_drugs_tags = set()
 
 	def scrape(self) -> List[Drug]:
 		drugs = self.get_drugs()
@@ -48,8 +56,29 @@ class BnfScraper:
 		def side_effects_section(tag):
 			return tag.name == "h3" and tag.has_attr("id") and "side-effects" in tag.get("id")
 		
+		def renal_section(tag):
+			return tag.name == "h3" and tag.has_attr("id") and "renal-" in tag.get("id")
+		
+		def pregnancy_section(tag):
+			return tag.name == "h3" and tag.has_attr("id") and "pregnancy-" in tag.get("id")
+		
+		def breast_feeding_section(tag):
+			return tag.name == "h3" and tag.has_attr("id") and "breast-feeding-" in tag.get("id")
+		
+		def heaptic_section(tag):
+			return tag.name == "h3" and tag.has_attr("id") and "hepatic-" in tag.get("id")
+		
+		renal_sections = soup.find_all(renal_section)
+		pregnancy_sections = soup.find_all(pregnancy_section)
+		breast_feeding_sections = soup.find_all(breast_feeding_section)
+		heaptic_sections = soup.find_all(heaptic_section)
 		side_effects = soup.find_all(side_effects_section)
-		drug = Drug(drug_name)
+		drug = Drug(drug_name,
+			endpoint.split("/")[2], 
+			True if len(renal_sections) > 0 else False,
+			True if len(pregnancy_sections) > 0 else False,
+			True if len(breast_feeding_sections) > 0 else False,
+			True if len(heaptic_sections) > 0 else False)
 		if side_effects == []:
 			return drug
 		

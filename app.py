@@ -12,6 +12,8 @@ scraper = BnfScraper(requests.session())
 
 drugs = scraper.scrape()
 
+
+
 print(drugs[0].__dict__)
 with open('data.json', 'w') as f:
 	json.dump(drugs, f, cls=DrugEncoder)
