@@ -36,9 +36,8 @@ class BnfScraper:
 		self.session = session
 		self.base_url = "https://bnf.nice.org.uk"
 		self.drug_endpoint = "drugs"
-		self.renal_drugs = set()
-		self.renal_drugs_lengths = set()
-		self.renal_drugs_tags = set()
+		self.elderly_drugs = set()
+		self.elderly_tags = set()
 
 	def scrape(self) -> List[Drug]:
 		drugs = self.get_drugs()
@@ -68,11 +67,21 @@ class BnfScraper:
 		def heaptic_section(tag):
 			return tag.name == "h3" and tag.has_attr("id") and "hepatic-" in tag.get("id")
 		
+		def elderly_section(tag):
+			return (tag.get_text() == "Elderly" or tag.get_text() == "elderly") and tag.name != "dt" and tag.name != "h5" and tag.name != "p"
+		
 		renal_sections = soup.find_all(renal_section)
 		pregnancy_sections = soup.find_all(pregnancy_section)
 		breast_feeding_sections = soup.find_all(breast_feeding_section)
 		heaptic_sections = soup.find_all(heaptic_section)
 		side_effects = soup.find_all(side_effects_section)
+		elderly_sections = soup.find_all(elderly_section)
+
+		if (len(elderly_sections) > 0):
+			self.elderly_drugs.add(drug_name)
+			for i in elderly_sections:
+				self.elderly_tags.add(i.name)
+
 		drug = Drug(drug_name,
 			endpoint.split("/")[2], 
 			True if len(renal_sections) > 0 else False,

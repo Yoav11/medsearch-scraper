@@ -15,6 +15,10 @@ drugs = scraper.scrape()
 
 
 print(drugs[0].__dict__)
+
+print(scraper.elderly_tags)
+print(scraper.elderly_drugs)
+
 with open('data.json', 'w') as f:
 	json.dump(drugs, f, cls=DrugEncoder)
 
