@@ -61,8 +61,6 @@ json_result = json.dumps(result, indent=4)
 with open('frailty.json', 'w') as json_file:
     json_file.write(json_result)
     
-import json
-
 # Load the existing JSON (with name and frailty object)
 with open('data.json', 'r') as existing_file:
     existing_data = json.load(existing_file)

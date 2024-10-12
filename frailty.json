@@ -797,6 +797,9 @@
         "start": [
             {
                 "Angiotensin-converting enzyme inhibitors": "With systolic heart failure and/or documented coronary artery disease."
+            },
+            {
+                "Angiotensin-converting enzyme inhibitors or angiotensin-II receptor antagonist  (if intolerant of ACEI)": "In diabetes with evidence of renal disease i.e. dipstick proteinuria or microalbuminuria (greater than 30 mg/24 hours) with or without serum biochemical renal impairment."
             }
         ],
         "score": 0
@@ -807,7 +810,11 @@
                 "Angiotensin-converting enzyme inhibitors, angiotensin-II receptor antagonist": "In patients with hyperkalaemia. In combination with each other (limited evidence of benefit) \u2013 unless under specialist review and recommendation."
             }
         ],
-        "start": [],
+        "start": [
+            {
+                "Angiotensin-converting enzyme inhibitors or angiotensin-II receptor antagonist  (if intolerant of ACEI)": "In diabetes with evidence of renal disease i.e. dipstick proteinuria or microalbuminuria (greater than 30 mg/24 hours) with or without serum biochemical renal impairment."
+            }
+        ],
         "score": 0
     },
     "Candesartan cilexetil": {
@@ -1635,6 +1642,12 @@
         "stop": [
             {
                 "Aspirin, clopidogrel, dipyridamole, warfarin or NOACs": "With concurrent significant bleeding risk, i.e. uncontrolled severe hypertension, bleeding diathesis, recent non-trivial spontaneous bleeding (high risk of bleeding)."
+            },
+            {
+                "Antiplatelet agents with warfarin or NOACs": "In patients with stable coronary, cerebrovascular or peripheral arterial disease (No added benefit from dual therapy)."
+            },
+            {
+                "Warfarin or NOACs": "For first deep vein thrombosis without continuing provoking risk factors (e.g.thrombophilia) for longer than 6 months (no proven added benefit). For first pulmonary embolus without continuing provoking risk factors (e.g.thrombophilia) for longer than 12 months (no proven added benefit)."
             }
         ],
         "start": [],
@@ -1644,6 +1657,12 @@
         "stop": [
             {
                 "Aspirin, clopidogrel, dipyridamole, warfarin or NOACs": "With concurrent significant bleeding risk, i.e. uncontrolled severe hypertension, bleeding diathesis, recent non-trivial spontaneous bleeding (high risk of bleeding)."
+            },
+            {
+                "Antiplatelet agents with warfarin or NOACs": "In patients with stable coronary, cerebrovascular or peripheral arterial disease (No added benefit from dual therapy)."
+            },
+            {
+                "Warfarin or NOACs": "For first deep vein thrombosis without continuing provoking risk factors (e.g.thrombophilia) for longer than 6 months (no proven added benefit). For first pulmonary embolus without continuing provoking risk factors (e.g.thrombophilia) for longer than 12 months (no proven added benefit)."
             },
             {
                 "Non steroidal anti-inflammatories PLUS warfarin or NOACs": "In combination (risk of major gastro-intestinal bleeding)."
@@ -1771,18 +1790,6 @@
         "stop": [
             {
                 "Antiplatelet agents with warfarin or NOACs": "In patients with stable coronary, cerebrovascular or peripheral arterial disease (No added benefit from dual therapy)."
-            }
-        ],
-        "start": [],
-        "score": 0
-    },
-    "Warfarin\n\nApixaban": {
-        "stop": [
-            {
-                "Antiplatelet agents with warfarin or NOACs": "In patients with stable coronary, cerebrovascular or peripheral arterial disease (No added benefit from dual therapy)."
-            },
-            {
-                "Warfarin or NOACs": "For first deep vein thrombosis without continuing provoking risk factors (e.g.thrombophilia) for longer than 6 months (no proven added benefit). For first pulmonary embolus without continuing provoking risk factors (e.g.thrombophilia) for longer than 12 months (no proven added benefit)."
             }
         ],
         "start": [],
@@ -4366,15 +4373,6 @@
         "start": [
             {
                 "Bone anti-resorptive or anabolic therapy (e.g. bisphosphonate) ": "In patients with documented osteoporosis, where no pharmacological or clinical status contraindication exists (Bone Mineral Density T-scores is less than -2.5 in multiple sites) and/or previous history of fragility fracture(s)."
-            }
-        ],
-        "score": 0
-    },
-    "Trandolapril with calcium channel blocker\n\nAzilsartan medoxomil": {
-        "stop": [],
-        "start": [
-            {
-                "Angiotensin-converting enzyme inhibitors or angiotensin-II receptor antagonist  (if intolerant of ACEI)": "In diabetes with evidence of renal disease i.e. dipstick proteinuria or microalbuminuria (greater than 30 mg/24 hours) with or without serum biochemical renal impairment."
             }
         ],
         "score": 0
