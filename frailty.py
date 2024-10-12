@@ -10,9 +10,30 @@ df1 = pd.read_csv(file1_path)
 file2_path = 'frailty_score.csv'  # Replace with the path to your second CSV file
 df2 = pd.read_csv(file2_path)
 
+# Load the drug name mapping
+file3_path = 'drug_name_mapping.csv'  # Replace with the path to your first CSV file
+df3 = pd.read_csv(file3_path)
+
 # Replace NaN values with empty strings in both dataframes
 df1 = df1.replace({np.nan: ''})
 df2 = df2.replace({np.nan: 0})  # Assuming missing scores should be treated as 0
+df3 = df3.replace({np.nan: ""})
+
+def get_bnf_name(drug):
+    f = drug + ","
+    g = "," + drug + ","
+    h = drug + ","
+    rows = df3[
+            (df3["stopp_or_acb_name"].str.startswith(f)) 
+            | (df3["stopp_or_acb_name"].str.contains(g)) 
+            | (df3["stopp_or_acb_name"].str.endswith(h)) 
+            | (df3["stopp_or_acb_name"] == drug)]
+    if (len(rows) > 1):
+        raise(drug, " has multiple bnf names!")
+    elif len(rows) == 0:
+        print(drug, " has no bnf name :(")
+        return drug
+    return rows.iloc[0]["bnf_name"]
 
 # Initialize a dictionary to store the result
 result = {}
@@ -24,7 +45,7 @@ for _, row in df1.iterrows():
         continue
     
     # Split the drugs column by commas and strip any whitespace
-    drugs = [drug.strip() for drug in row['drugs'].split(',') if drug.strip()]
+    drugs = [get_bnf_name(drug.strip().lower()).title() for drug in row['drugs'].split(',') if drug.strip()]
     
     # Check whether the action is "stop" or "start"
     action = row['stop or start'].strip().lower()
@@ -44,7 +65,7 @@ for _, row in df1.iterrows():
 
 # Now, iterate through the second CSV (drug, score) and add the score to the respective drugs
 for _, row in df2.iterrows():
-    drug = row['drug'].strip()
+    drug = get_bnf_name(row['drug'].strip().lower()).title()
     score = row['score']
     
     # If the drug already exists in the result, update its score
@@ -69,17 +90,22 @@ with open('data.json', 'r') as existing_file:
 with open('frailty.json', 'r') as combined_file:
     combined_data = json.load(combined_file)
 
-# Create a set of drug names from the existing JSON for quick lookup
-existing_drug_names = {entry['name'] for entry in existing_data}
+# Update the "frailty" object for each drug in the existing data
+for drug_name, frailty_data in combined_data.items():
+    found = False
+    for drug_entry in existing_data:
+        if drug_name == drug_entry.get('name'):
+            drug_entry['frailty'] = frailty_data
+            found = True
+            break
+    if not found:
+        print(drug_name, " was not found and is now added!")
+        existing_data.append({
+            "name": drug_name,
+            "frailty": frailty_data
+        })
+        
 
-# Initialize a list to store the drugs that meet the criteria
-new_drugs_with_score = []
-
-# Iterate through the combined JSON to find drugs with score > 0
-for drug, data in combined_data.items():
-    if data['score'] > 0 and drug not in existing_drug_names:
-        new_drugs_with_score.append(drug)
-
-# Print the resulting list of new drugs with a score greater than 0
-print("Drugs with a score greater than 0 that do not appear in the existing JSON:")
-print(new_drugs_with_score)
+# Optionally, write the updated JSON back to a file
+with open('data_updated.json', 'w') as output_file:
+    json.dump(existing_data, output_file, separators=(',', ':'))
