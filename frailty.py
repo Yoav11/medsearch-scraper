@@ -14,26 +14,35 @@ df2 = pd.read_csv(file2_path)
 file3_path = 'drug_name_mapping.csv'  # Replace with the path to your first CSV file
 df3 = pd.read_csv(file3_path)
 
+file4_path = 'not_found_mapped_red.csv'  # Replace with the path to your first CSV file
+df4 = pd.read_csv(file4_path)
+
 # Replace NaN values with empty strings in both dataframes
 df1 = df1.replace({np.nan: ''})
 df2 = df2.replace({np.nan: 0})  # Assuming missing scores should be treated as 0
 df3 = df3.replace({np.nan: ""})
+df4 = df4.replace({np.nan: ""})
 
 def get_bnf_name(drug):
     f = drug + ","
     g = "," + drug + ","
-    h = drug + ","
+    h = "," + drug
     rows = df3[
             (df3["stopp_or_acb_name"].str.startswith(f)) 
             | (df3["stopp_or_acb_name"].str.contains(g)) 
             | (df3["stopp_or_acb_name"].str.endswith(h)) 
             | (df3["stopp_or_acb_name"] == drug)]
-    if (len(rows) > 1):
-        raise(drug, " has multiple bnf names!")
-    elif len(rows) == 0:
-        print(drug, " has no bnf name :(")
-        return drug
-    return rows.iloc[0]["bnf_name"]
+    
+    second_rows = df4[
+            (df4["alternative names"].str.lower().str.startswith(f)) 
+            | (df4["alternative names"].str.lower().str.contains(g)) 
+            | (df4["alternative names"].str.lower().str.endswith(h)) 
+            | (df4["alternative names"].str.lower() == drug)]
+    
+    if len(rows)+len(second_rows) == 0:
+        return [drug.capitalize()]
+
+    return rows["bnf_name"].str.capitalize().to_list() + second_rows["BNF name"].str.capitalize().to_list()
 
 # Initialize a dictionary to store the result
 result = {}
@@ -45,7 +54,7 @@ for _, row in df1.iterrows():
         continue
     
     # Split the drugs column by commas and strip any whitespace
-    drugs = [get_bnf_name(drug.strip().lower()).title() for drug in row['drugs'].split(',') if drug.strip()]
+    drugs = [get_bnf_name(drug.strip().lower()) for drug in row['drugs'].split(',') if drug.strip()]
     
     # Check whether the action is "stop" or "start"
     action = row['stop or start'].strip().lower()
@@ -55,25 +64,27 @@ for _, row in df1.iterrows():
         continue
     
     # For each drug in the list
-    for drug in drugs:
-        if drug not in result:
-            result[drug] = {'stop': [], 'start': [], 'score': 0}
-        
-        # Add the heading and text to the corresponding action list
-        if row['heading'].strip() and row['text'].strip():
-            result[drug][action].append({row['heading']: row['text']})
+    for names in drugs:
+        for name in names:
+            if name not in result:
+                result[name] = {'stop': [], 'start': [], 'score': 0}
+            
+            # Add the heading and text to the corresponding action list
+            if row['heading'].strip() and row['text'].strip():
+                result[name][action].append({row['heading']: row['text']})
 
 # Now, iterate through the second CSV (drug, score) and add the score to the respective drugs
 for _, row in df2.iterrows():
-    drug = get_bnf_name(row['drug'].strip().lower()).title()
+    drugs = get_bnf_name(row['drug'].strip().lower())
     score = row['score']
-    
-    # If the drug already exists in the result, update its score
-    if drug in result:
-        result[drug]['score'] = score
-    # If the drug is not in result, add it with an empty stop/start and assign the score
-    else:
-        result[drug] = {'stop': [], 'start': [], 'score': score}
+
+    for drug in drugs:
+        # If the drug already exists in the result, update its score
+        if drug in result:
+            result[drug]['score'] = max(result[drug]['score'], score)
+        # If the drug is not in result, add it with an empty stop/start and assign the score
+        else:
+            result[drug] = {'stop': [], 'start': [], 'score': score}
 
 # Convert the result to a JSON string
 json_result = json.dumps(result, indent=4)
@@ -91,6 +102,7 @@ with open('frailty.json', 'r') as combined_file:
     combined_data = json.load(combined_file)
 
 # Update the "frailty" object for each drug in the existing data
+count = 0
 for drug_name, frailty_data in combined_data.items():
     found = False
     for drug_entry in existing_data:
@@ -99,13 +111,14 @@ for drug_name, frailty_data in combined_data.items():
             found = True
             break
     if not found:
+        count+=1
         print(drug_name, " was not found and is now added!")
         existing_data.append({
             "name": drug_name,
             "frailty": frailty_data
         })
         
-
+print("added", count, "drugs")
 # Optionally, write the updated JSON back to a file
 with open('data_updated.json', 'w') as output_file:
     json.dump(existing_data, output_file, separators=(',', ':'))
